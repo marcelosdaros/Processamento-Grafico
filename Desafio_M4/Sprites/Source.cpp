@@ -73,8 +73,6 @@ int main()
  	Sprite bones      (&shader, loadTexture(textures[7]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0);
 	Sprite monster    (&shader, loadTexture(textures[8]), glm::vec3(400.0, 200.0, 0.0), glm::vec3(100, 100, 1.0), 0.0);
 
-	// player = new Sprite(&shader, loadTexture("../battleground_images/knight.png"), glm::vec3(400.0, 150.0, 0.0), glm::vec3(128, 128, 1.0), 180.0);
-
 	//Ativando o buffer de textura 0 da opengl
 	glActiveTexture(GL_TEXTURE0);
 	shader.Use();
