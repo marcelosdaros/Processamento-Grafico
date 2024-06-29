@@ -44,7 +44,7 @@ int main()
 	// Compilando e buildando o programa de shader
 	Shader shader("../shaders/tex_vert.glsl", "../shaders/tex_frag.glsl");
 
-	// Configuração de profundidade e mistura de texturas
+	// Configuração de profundidade e combinação de texturas
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
