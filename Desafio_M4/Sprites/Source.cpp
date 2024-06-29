@@ -1,28 +1,19 @@
 #include <iostream>
 #include <string>
 #include <assert.h>
-
-//GLM
 #include <glm/glm.hpp> 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
-//STB IMAGE
 #include<stb_image.h>
 
-using namespace std;
-
-//Classe para manipulação dos shaders
+//Classes manipulação de shaders e sprites
 #include "Shader.h"
+#include "Sprite.h"
 #include <vector>
 
-// Protótipo da função de callback de teclado
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
-
 // Protótipos das funções
-int setupGeometry();
-std::vector<GLuint> loadTextures(int VAOsLength);
-void drawScene(unsigned int* VAOs, std::vector<GLuint> texIDs, int texturesQty);
+GLuint loadTexture(string texturePath);
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 
 // Dimensões da janela
 const GLuint WIDTH = 800, HEIGHT = 600;
@@ -37,10 +28,11 @@ int main()
 	glfwMakeContextCurrent(window);
 	glfwSetKeyCallback(window, key_callback);
 
-	// GLAD: carrega todos os ponteiros das funções da OpenGL
+	// GLAD: carrega todos os ponteiros d funções da OpenGL
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
-		cout << "Failed to initialize GLAD" << endl;
+		cout << "Falha ao inicializar a GLAD" << endl;
+
 	}
 
 	// Informações de versão
@@ -52,141 +44,12 @@ int main()
 	// Compilando e buildando o programa de shader
 	Shader shader("../shaders/tex_vert.glsl", "../shaders/tex_frag.glsl");
 
-	// Criação das VAOs para cada uma das 8 imagens
-	unsigned int VAOs[8];
-	int texturesQty = sizeof(VAOs) / sizeof(VAOs[0]);
-	
-	// Criação da geometria de cada VAO
-	for (GLuint i = 0; i < texturesQty; i++) {
-		VAOs[i] = setupGeometry();
-	}
+	// Configuração de profundidade e mistura de texturas
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDepthFunc(GL_ALWAYS);
 
-	// Criação dos parâmetros e IDs das texturas
-	std::vector<GLuint> texIDs = loadTextures(texturesQty);
-
-	//Matriz de projeção paralela ortográfica
-	glm::mat4 projection = glm::ortho(0.0,800.0,0.0,600.0,-1.0,1.0);
-	//Enviando para o shader a matriz como uma var uniform
-	shader.setMat4("projection", glm::value_ptr(projection));
-
-	//Matriz da imagem de fundo (matriz de modelo)
-	glm::mat4 model = glm::mat4(1); //matriz identidade
-	model = glm::translate(model, glm::vec3(400.0, 300.0, 0.0));
-	model = glm::rotate(model, glm::radians(0.0f), glm::vec3(0.0, 0.0, 1.0));
-	model = glm::scale(model, glm::vec3(800.0, 500.0, 0.0));
-	shader.setMat4("model", glm::value_ptr(model));
-
-	shader.Use();
-	shader.setInt("texBuffer", 0);
-
-	// Loop da aplicação - "game loop"
-	while (!glfwWindowShouldClose(window))
-	{
-		// Definindo as dimensões da viewport com as mesmas dimensões da janela da aplicação
-		int width, height;
-		glfwGetFramebufferSize(window, &width, &height);
-		glViewport(0, 0, width, height); //unidades de tela: pixel
-		
-		// Limpa o buffer de cor
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f); //cor de fundo
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		glLineWidth(10);
-		glPointSize(20);
-
-		// Chamadas de desenho da cena
-		drawScene(VAOs, texIDs, texturesQty);
-
-		// Troca os buffers da tela
-		glfwSwapBuffers(window);
-
-		// Checa se houveram eventos de input (key pressed, mouse moved etc.) e chama as funções de callback correspondentes
-		glfwPollEvents();
-	}
-	// Desaloca os buffers
-	for (unsigned int i = 0; i < texturesQty; i++) {
-		glDeleteVertexArrays(1, &VAOs[i]);
-	}
-	// Finaliza a execução da GLFW, limpando os recursos alocados por ela
-	glfwTerminate();
-	return 0;
-}
-
-// Função de callback de teclado
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
-{
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, GL_TRUE);
-}
-
-int setupGeometry()
-{
-	// Aqui setamos as coordenadas x, y e z do triângulo e as armazenamos de forma
-	// sequencial, já visando mandar para o VBO (Vertex Buffer Objects)
-	// Cada atributo do vértice (coordenada, cores, coordenadas de textura, normal, etc)
-	// Pode ser armazenado em um VBO único ou em VBOs separados
-	GLfloat vertices[] = {
-		//x     y    z    r    g    b    s    t
-		//Triangulo 0
-		-0.5f , 0.5f, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0,  //v0
-		-0.5f ,-0.5f, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0,  //v1
-		 0.5f , 0.5f, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0,  //v2
-		 //Triangulo 1	
-	    -0.5f ,-0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,  //v1
-		 0.5f ,-0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,  //v3
-		 0.5f , 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f   //v2
-	};
-
-	GLuint VBO, VAO;
-	//Geração do identificador do VBO
-	glGenBuffers(1, &VBO);
-	//Faz a conexão (vincula) do buffer como um buffer de array
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	//Envia os dados do array de floats para o buffer da OpenGl
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	//Geração do identificador do VAO (Vertex Array Object)
-	glGenVertexArrays(1, &VAO);
-	// Vincula (bind) o VAO primeiro, e em seguida  conecta e seta o(s) buffer(s) de vértices
-	// e os ponteiros para os atributos 
-	glBindVertexArray(VAO);
-	
-	//Atributo 0 - posição
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
-	glEnableVertexAttribArray(0);
-
-	//Atributo 1 - cor
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(1);
-
-	//Atributo 2 - coordenadas de textura
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(2);
-
-	// Desvincula o VAO (é uma boa prática desvincular qualquer buffer ou array para evitar bugs)
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-
-	return VAO;
-}
-
-void drawScene(unsigned int* VAOs, std::vector<GLuint> texIDs, int texturesQty)
-{
-	for (int i = 0; i < texturesQty; i++) {
-		glBindTexture(GL_TEXTURE_2D, texIDs[i]);
-		glBindVertexArray(VAOs[i]); // Conectando ao buffer de geometria
-		glDrawArrays(GL_TRIANGLES, 0, 6); // Para os triângulos
-
-		glActiveTexture(GL_TEXTURE0);
-
-	}
-
-	glBindTexture(GL_TEXTURE_2D, 0); //unbind
-	glBindVertexArray(0); //Desconectando o buffer de geometria
-}
-
-std::vector<GLuint> loadTextures(int texturesQty)
-{
 	// Armazenamento do diretório de cada textura
 	std::string textures[] = {
 		"../battleground_images/sky.png",
@@ -196,50 +59,118 @@ std::vector<GLuint> loadTextures(int texturesQty)
 		"../battleground_images/wall.png",
 		"../battleground_images/ground.png",
 		"../battleground_images/tree.png",
-		"../battleground_images/details.png"
+		"../battleground_images/bones.png",
+		"../battleground_images/monster.png"
 	};
 
-	// Criação do vetor que irá armazenar o ID de cada textura
-	std::vector<GLuint> texIDs(texturesQty);
+	Sprite sky        (&shader, loadTexture(textures[0]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0);
+	Sprite graves     (&shader, loadTexture(textures[1]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0);
+	Sprite back_trees (&shader, loadTexture(textures[2]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0);
+	Sprite crypt      (&shader, loadTexture(textures[3]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0);
+	Sprite wall       (&shader, loadTexture(textures[4]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0);
+	Sprite ground     (&shader, loadTexture(textures[5]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0);
+	Sprite tree       (&shader, loadTexture(textures[6]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0);
+ 	Sprite bones      (&shader, loadTexture(textures[7]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0);
+	Sprite monster    (&shader, loadTexture(textures[8]), glm::vec3(400.0, 200.0, 0.0), glm::vec3(100, 100, 1.0), 0.0);
 
-	for (GLuint i = 0; i < texturesQty; i++) {
-		// Gera o identificador da textura na memória 
-		glGenTextures(1, &texIDs[i]);
-		glBindTexture(GL_TEXTURE_2D, texIDs[i]);
+	// player = new Sprite(&shader, loadTexture("../battleground_images/knight.png"), glm::vec3(400.0, 150.0, 0.0), glm::vec3(128, 128, 1.0), 180.0);
 
-		//Configuração do parâmetro WRAPPING nas coords s e t
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	//Ativando o buffer de textura 0 da opengl
+	glActiveTexture(GL_TEXTURE0);
+	shader.Use();
+	shader.setInt("texBuffer", 0);
 
-		//Configuração do parâmetro FILTERING na minificação e magnificação da textura
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	//Matriz de projeção paralela ortográfica
+	glm::mat4 projection = glm::ortho(0.0, 800.0, 0.0, 600.0, -1.0, 1.0);
+	shader.setMat4("projection", glm::value_ptr(projection));
 
-		int width, height, nrChannels;
+	// Loop da aplicação - "game loop"
+	while (!glfwWindowShouldClose(window))
+	{
+		// Definindo as dimensões da viewport com as mesmas dimensões da janela da aplicação
+		int width, height;
+		glfwGetFramebufferSize(window, &width, &height);
+		glViewport(0, 0, width, height); //unidades de tela: pixel
 
-		stbi_set_flip_vertically_on_load(true); // comando para que a imagem não fique invertida
-		unsigned char* data = stbi_load(textures[i].c_str(), &width, &height, &nrChannels, 0);
+		// Limpa o buffer de cor
+		glClearColor(0.5f, 0.5f, 0.5f, 1.0f); //cor de fundo
+		glClear(GL_COLOR_BUFFER_BIT);
 
-		if (data)
-		{
-			if (nrChannels == 3) //jpg, bmp
-			{
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-			}
-			else //png
-			{
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-			}
-			glGenerateMipmap(GL_TEXTURE_2D);
-		}
-		else
-		{
-			std::cout << "Failed to load texture" << std::endl;
-		}
+		glLineWidth(10);
+		glPointSize(20);
 
-		stbi_image_free(data);
-		glBindTexture(GL_TEXTURE_2D, 0);
+		sky.drawShader();
+		graves.drawShader();
+		back_trees.drawShader();
+		crypt.drawShader();
+		wall.drawShader();
+		ground.drawShader();
+		tree.drawShader();
+		bones.drawShader();
+		monster.drawShader();
+
+		// Troca os buffers da tela
+		glfwSwapBuffers(window);
+
+		// Checa se houveram eventos de input (key pressed, mouse moved etc.) e chama as funções de callback correspondentes
+		glfwPollEvents();
 	}
 
-	return texIDs;
+	// Finaliza a execução da GLFW, limpando os recursos alocados por ela
+	glfwTerminate();
+	return 0;
+}
+
+// Função de callback de teclado - só pode ter uma instância (deve ser estática se
+// estiver dentro de uma classe) - É chamada sempre que uma tecla for pressionada
+// ou solta via GLFW
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
+{
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, GL_TRUE);
+}
+
+
+GLuint loadTexture(string path)
+{
+	GLuint texID;
+
+	// Gera o identificador da textura na memória 
+	glGenTextures(1, &texID);
+	glBindTexture(GL_TEXTURE_2D, texID);
+
+	//Configuração do parâmetro WRAPPING nas coords s e t
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	//Confirugação do parâmetro FILTERING na minificação e magnificação da textura
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	int width, height, nrChannels;
+
+	stbi_set_flip_vertically_on_load(true); // comando para que a imagem não fique invertida
+	unsigned char* data = stbi_load(path.c_str(), &width, &height, &nrChannels, 0);
+
+	if (data)
+	{
+		if (nrChannels == 3) //jpg, bmp
+		{
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		}
+		else //png
+		{
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		}
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		std::cout << "Failed to load texture" << std::endl;
+	}
+
+	stbi_image_free(data);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	return texID;
 }
