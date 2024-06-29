@@ -62,7 +62,7 @@ void Sprite::setShader(Shader* shader)
 	this->shader = shader;
 }
 
-void Sprite::updateShader()
+void Sprite::configureModel()
 {
 	// Matriz das imagens de fundo (matriz de modelo)
 	glm::mat4 model = glm::mat4(1); // Matriz identidade
@@ -74,7 +74,7 @@ void Sprite::updateShader()
 
 void Sprite::drawShader()
 {
-	updateShader();
+	configureModel();
 
 	glBindTexture(GL_TEXTURE_2D, texID);
 	glBindVertexArray(VAO); // Conectando ao buffer de geometria

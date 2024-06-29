@@ -24,5 +24,6 @@ protected:
 	glm::vec3 scale;
 	float angle;
 
-	void updateShader();
+	void configureModel();
 };
+
