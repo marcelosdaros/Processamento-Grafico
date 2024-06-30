@@ -133,35 +133,35 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
 
-	if (key == GLFW_KEY_W) {
+	if (key == GLFW_KEY_UP) {
 		monster->goUp();
 	}
 
-	if (key == GLFW_KEY_S) {
+	if (key == GLFW_KEY_DOWN) {
 		monster->goDown();
 	}
 
-	if (key == GLFW_KEY_A) {
+	if (key == GLFW_KEY_LEFT) {
 		monster->goLeft();
 	}
 
-	if (key == GLFW_KEY_D) {
+	if (key == GLFW_KEY_RIGHT) {
 		monster->goRight();
 	}
 
-	if (key == GLFW_KEY_UP) {
+	if (key == GLFW_KEY_W) {
 		hero->goUp();
 	}
 
-	if (key == GLFW_KEY_DOWN) {
+	if (key == GLFW_KEY_S) {
 		hero->goDown();
 	}
 
-	if (key == GLFW_KEY_LEFT) {
+	if (key == GLFW_KEY_A) {
 		hero->goLeft();
 	}
 
-	if (key == GLFW_KEY_RIGHT) {
+	if (key == GLFW_KEY_D) {
 		hero->goRight();
 	}
 }
