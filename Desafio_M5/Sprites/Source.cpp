@@ -19,6 +19,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 const GLuint WIDTH = 800, HEIGHT = 600;
 
 Sprite* monster;
+Sprite* hero;
 
 int main()
 {
@@ -62,18 +63,20 @@ int main()
 		"../battleground_images/ground.png",
 		"../battleground_images/tree.png",
 		"../battleground_images/bones.png",
-		"../battleground_images/monster.png"
+		"../battleground_images/monster.png",
+		"../battleground_images/hero.png"
 	};
 
-	Sprite sky(&shader, loadTexture(textures[0]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0, 0.0);
-	Sprite graves(&shader, loadTexture(textures[1]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0, 0.0);
-	Sprite back_trees(&shader, loadTexture(textures[2]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0, 0.0);
-	Sprite crypt(&shader, loadTexture(textures[3]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0, 0.0);
-	Sprite wall(&shader, loadTexture(textures[4]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0, 0.0);
-	Sprite ground(&shader, loadTexture(textures[5]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0, 0.0);
-	Sprite tree(&shader, loadTexture(textures[6]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0, 0.0);
-	Sprite bones(&shader, loadTexture(textures[7]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0, 0.0);
-	monster = new Sprite(&shader, loadTexture(textures[8]), glm::vec3(400.0, 200.0, 0.0), glm::vec3(100, 100, 1.0), 0.0, 5.0);
+	Sprite sky           (&shader, loadTexture(textures[0]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0, 0.0);
+	Sprite graves        (&shader, loadTexture(textures[1]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0, 0.0);
+	Sprite back_trees    (&shader, loadTexture(textures[2]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0, 0.0);
+	Sprite crypt         (&shader, loadTexture(textures[3]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0, 0.0);
+	Sprite wall          (&shader, loadTexture(textures[4]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0, 0.0);
+	Sprite ground        (&shader, loadTexture(textures[5]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0, 0.0);
+	Sprite tree          (&shader, loadTexture(textures[6]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0, 0.0);
+	Sprite bones         (&shader, loadTexture(textures[7]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0, 0.0);
+	monster = new Sprite (&shader, loadTexture(textures[8]), glm::vec3(400.0, 200.0, 0.0), glm::vec3(100, 100, 1.0), 0.0, 5.0);
+	hero = new Sprite    (&shader, loadTexture(textures[9]), glm::vec3(100.0, 200.0, 0.0), glm::vec3(100, 100, 1.0), 0.0, 5.0);
 
 	// Ativando o buffer de textura 0 da opengl
 	glActiveTexture(GL_TEXTURE0);
@@ -108,6 +111,7 @@ int main()
 		tree.drawShader();
 		bones.drawShader();
 		monster->drawShader();
+		hero->drawShader();
 
 		// Troca os buffers da tela
 		glfwSwapBuffers(window);
@@ -143,6 +147,22 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 	if (key == GLFW_KEY_D) {
 		monster->goRight();
+	}
+
+	if (key == GLFW_KEY_UP) {
+		hero->goUp();
+	}
+
+	if (key == GLFW_KEY_DOWN) {
+		hero->goDown();
+	}
+
+	if (key == GLFW_KEY_LEFT) {
+		hero->goLeft();
+	}
+
+	if (key == GLFW_KEY_RIGHT) {
+		hero->goRight();
 	}
 }
 
