@@ -126,6 +126,7 @@
     <ClCompile Include="glad.c" />
     <ClCompile Include="Source.cpp" />
 	<ClCompile Include="Sprite.cpp" />
+	<ClCompile Include="CharacterController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\shaders\tex_frag.glsl" />
@@ -134,6 +135,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\Common\include\Shader.h" />
 	<ClInclude Include="Sprite.h" />
+	<ClCompile Include="CharacterController.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

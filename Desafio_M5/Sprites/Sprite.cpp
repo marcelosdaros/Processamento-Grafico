@@ -1,7 +1,7 @@
 #include "Sprite.h"
 
-Sprite::Sprite(Shader* shader, GLuint texID, glm::vec3 position, glm::vec3 scale, float angle, float movement)
-{
+Sprite::Sprite(Shader* shader, GLuint texID, glm::vec3 position, glm::vec3 scale, float angle, float movement) {
+
 	this->texID = texID;
 	this->position = position;
 	this->scale = scale;
@@ -53,18 +53,15 @@ Sprite::Sprite(Shader* shader, GLuint texID, glm::vec3 position, glm::vec3 scale
 	glBindVertexArray(0);
 }
 
-Sprite::~Sprite()
-{
+Sprite::~Sprite() {
 	glDeleteVertexArrays(1, &VAO);
 }
 
-void Sprite::setShader(Shader* shader)
-{
+void Sprite::setShader(Shader* shader) {
 	this->shader = shader;
 }
 
-void Sprite::configureModel()
-{
+void Sprite::configureModel() {
 	// Matriz das imagens de fundo (matriz de modelo)
 	glm::mat4 model = glm::mat4(1); // Matriz identidade
 	model = glm::translate(model, position);
@@ -73,8 +70,8 @@ void Sprite::configureModel()
 	shader->setMat4("model", glm::value_ptr(model));
 }
 
-void Sprite::drawShader()
-{
+void Sprite::drawShader() {
+
 	configureModel();
 
 	glBindTexture(GL_TEXTURE_2D, texID);

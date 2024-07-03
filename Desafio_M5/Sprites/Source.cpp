@@ -4,11 +4,12 @@
 #include <glm/glm.hpp> 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include<stb_image.h>
+#include <stb_image.h>
 
 //Classes manipulação de shaders e sprites
 #include "Shader.h"
 #include "Sprite.h"
+#include "CharacterController.h"
 #include <vector>
 
 // Protótipos das funções
@@ -19,7 +20,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 const GLuint WIDTH = 800, HEIGHT = 600;
 
 Sprite* monster;
-Sprite* hero;
+CharacterController* hero;
 
 int main()
 {
@@ -64,7 +65,7 @@ int main()
 		"../battleground_images/tree.png",
 		"../battleground_images/bones.png",
 		"../battleground_images/monster.png",
-		"../battleground_images/hero.png"
+		"../battleground_images/hero_spritesheet.png"
 	};
 
 	Sprite sky           (&shader, loadTexture(textures[0]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0, 0.0);
@@ -76,7 +77,7 @@ int main()
 	Sprite tree          (&shader, loadTexture(textures[6]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0, 0.0);
 	Sprite bones         (&shader, loadTexture(textures[7]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0, 0.0);
 	monster = new Sprite (&shader, loadTexture(textures[8]), glm::vec3(400.0, 200.0, 0.0), glm::vec3(100, 100, 1.0), 0.0, 5.0);
-	hero = new Sprite    (&shader, loadTexture(textures[9]), glm::vec3(100.0, 200.0, 0.0), glm::vec3(100, 100, 1.0), 0.0, 5.0);
+	hero = new CharacterController(&shader, loadTexture(textures[9]), glm::vec3(100.0, 200.0, 0.0), glm::vec3(100, 100, 1.0), 0.0, 5.0, 3, 0);
 
 	// Ativando o buffer de textura 0 da opengl
 	glActiveTexture(GL_TEXTURE0);

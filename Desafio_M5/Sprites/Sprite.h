@@ -7,8 +7,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "Shader.h"
 
-class Sprite
-{
+class Sprite {
+
 public:
 	Sprite(Shader* shader, GLuint texID, glm::vec3 position, glm::vec3 scale, float angle, float movement);
 	~Sprite();
