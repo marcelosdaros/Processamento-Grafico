@@ -77,7 +77,8 @@ int main()
 	Sprite tree          (&shader, loadTexture(textures[6]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0, 0.0);
 	Sprite bones         (&shader, loadTexture(textures[7]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0, 0.0);
 	monster = new Sprite (&shader, loadTexture(textures[8]), glm::vec3(400.0, 200.0, 0.0), glm::vec3(100, 100, 1.0), 0.0, 5.0);
-	hero = new CharacterController(&shader, loadTexture(textures[9]), glm::vec3(100.0, 200.0, 0.0), glm::vec3(100, 100, 1.0), 0.0, 5.0, 3, 0);
+
+	hero = new CharacterController(&shader, loadTexture(textures[9]), glm::vec3(100.0, 200.0, 0.0), glm::vec3(100, 100, 1.0), 0.0, 5.0, 3, 1);
 
 	// Ativando o buffer de textura 0 da opengl
 	glActiveTexture(GL_TEXTURE0);
@@ -152,18 +153,22 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 	if (key == GLFW_KEY_W) {
 		hero->goUp();
+		hero->changeStep();
 	}
 
 	if (key == GLFW_KEY_S) {
 		hero->goDown();
+		hero->changeStep();
 	}
 
 	if (key == GLFW_KEY_A) {
 		hero->goLeft();
+		hero->changeStep();
 	}
 
 	if (key == GLFW_KEY_D) {
 		hero->goRight();
+		hero->changeStep();
 	}
 }
 

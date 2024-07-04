@@ -1,23 +1,31 @@
 #include "CharacterController.h"
 
-CharacterController::CharacterController(Shader* shader, GLuint texID, glm::vec3 position, glm::vec3 scale, float angle, float movement, int nFrames, int iFrame)
+CharacterController::CharacterController(Shader* shader, GLuint texID, glm::vec3 position, glm::vec3 scale, float angle, float movement, int nFrames, int step)
 	: Sprite(shader, texID, position, scale, angle, movement) {
 	
-	this->nFrames = nFrames; // 3
-	this->iFrame = iFrame;   // 0
-	float ds = 1.0 / (float)nFrames;
+	this->nFrames = nFrames;
+	this->step = step;
+	
+	setupVertices(0.33, 0.0);
+}
+
+CharacterController::~CharacterController() {
+	glDeleteVertexArrays(1, &VAO);
+}
+
+void CharacterController::setupVertices(float pi, float pf) {
 	// Coordenadas x, y e z dos triângulos para mandar para o VBO (Vertex Buffer Object)
 	// Os atributos foram armazenados num VBO único
 	GLfloat vertices[] = {
-		// x    y     z     R     G     B     s     t
+		// x    y     z     R     G     B     s   t
 		// Triangulo 0
-		 -0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,  //v0
-		 -0.5f,-0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,  //v1
-		  0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,   ds, 1.0f,  //v2
+		 -0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, pi, 1.0f,  //v0
+		 -0.5f,-0.5f, 0.0f, 1.0f, 0.0f, 0.0f, pi, 0.0f,  //v1
+		  0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, pf, 1.0f,  //v2
 		// Triangulo 1	
-		 -0.5f,-0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,  //v1
-		  0.5f,-0.5f, 0.0f, 1.0f, 0.0f, 0.0f,   ds, 0.0f,  //v3
-		  0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,   ds, 1.0f   //v2
+		 -0.5f,-0.5f, 0.0f, 1.0f, 0.0f, 0.0f, pi, 0.0f,  //v1
+		  0.5f,-0.5f, 0.0f, 1.0f, 0.0f, 0.0f, pf, 0.0f,  //v3
+		  0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, pf, 1.0f   //v2
 
 	};
 
@@ -50,6 +58,16 @@ CharacterController::CharacterController(Shader* shader, GLuint texID, glm::vec3
 	glBindVertexArray(0);
 }
 
-CharacterController::~CharacterController() {
-	glDeleteVertexArrays(1, &VAO);
+void CharacterController::changeStep() {
+	if (this->step == 3) {
+		this->step = 1;
+	}
+	else {
+		this->step++;
+	}
+
+	float interval = 1.0 / (float)this->nFrames;
+	float pf = interval * (float)this->step; // ponto final
+	float pi = pf - 0.33; // ponto inicial
+	setupVertices(pi, pf);
 }
