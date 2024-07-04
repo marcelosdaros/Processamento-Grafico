@@ -80,6 +80,6 @@ void Sprite::drawShader()
 	glBindVertexArray(VAO); // Conectando ao buffer de geometria
 	glDrawArrays(GL_TRIANGLES, 0, 6); // Para os triângulos
 
-	glBindTexture(GL_TEXTURE_2D, 0); // unbind
+	glBindTexture(GL_TEXTURE_2D, 0); // Unbind
 	glBindVertexArray(0); // Desconectando o buffer de geometria
 }

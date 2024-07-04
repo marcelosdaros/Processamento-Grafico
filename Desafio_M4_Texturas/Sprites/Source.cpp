@@ -1,10 +1,14 @@
+/* 
+ * Desenvolvido por Marcelo Strack Daros para a disciplina de Processamento Gráfico - Unisinos
+ */
+
 #include <iostream>
 #include <string>
 #include <assert.h>
 #include <glm/glm.hpp> 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include<stb_image.h>
+#include <stb_image.h>
 
 //Classes manipulação de shaders e sprites
 #include "Shader.h"
@@ -32,14 +36,7 @@ int main()
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
 		cout << "Falha ao inicializar a GLAD" << endl;
-
 	}
-
-	// Informações de versão
-	const GLubyte* renderer = glGetString(GL_RENDERER); /* get renderer string */
-	const GLubyte* version = glGetString(GL_VERSION); /* version as a string */
-	cout << "Renderer: " << renderer << endl;
-	cout << "OpenGL version supported " << version << endl;
 
 	// Compilando e buildando o programa de shader
 	Shader shader("../shaders/tex_vert.glsl", "../shaders/tex_frag.glsl");
@@ -97,6 +94,7 @@ int main()
 		glLineWidth(10);
 		glPointSize(20);
 
+		// Desenho das texturas
 		sky.drawShader();
 		graves.drawShader();
 		back_trees.drawShader();
@@ -110,7 +108,7 @@ int main()
 		// Troca os buffers da tela
 		glfwSwapBuffers(window);
 
-		// Checa se houveram eventos de input (key pressed, mouse moved etc.) e chama as funções de callback correspondentes
+		// Verifica se houveram eventos de input e chama as funções de callback
 		glfwPollEvents();
 	}
 
