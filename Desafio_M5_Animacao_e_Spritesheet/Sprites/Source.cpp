@@ -36,7 +36,6 @@ int main()
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
 		cout << "Falha ao inicializar a GLAD" << endl;
-
 	}
 
 	// Informações de versão
@@ -68,17 +67,17 @@ int main()
 		"../battleground_images/hero_spritesheet.png"
 	};
 
-	Sprite sky           (&shader, loadTexture(textures[0]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0, 0.0);
-	Sprite graves        (&shader, loadTexture(textures[1]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0, 0.0);
-	Sprite back_trees    (&shader, loadTexture(textures[2]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0, 0.0);
-	Sprite crypt         (&shader, loadTexture(textures[3]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0, 0.0);
-	Sprite wall          (&shader, loadTexture(textures[4]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0, 0.0);
-	Sprite ground        (&shader, loadTexture(textures[5]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0, 0.0);
-	Sprite tree          (&shader, loadTexture(textures[6]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0, 0.0);
-	Sprite bones         (&shader, loadTexture(textures[7]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0, 0.0);
-	monster = new Sprite (&shader, loadTexture(textures[8]), glm::vec3(400.0, 200.0, 0.0), glm::vec3(100, 100, 1.0), 0.0, 5.0);
+	Sprite sky           (&shader, loadTexture(textures[0]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0, 0.0, false);
+	Sprite graves        (&shader, loadTexture(textures[1]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0, 0.0, false);
+	Sprite back_trees    (&shader, loadTexture(textures[2]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0, 0.0, false);
+	Sprite crypt         (&shader, loadTexture(textures[3]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0, 0.0, false);
+	Sprite wall          (&shader, loadTexture(textures[4]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0, 0.0, false);
+	Sprite ground        (&shader, loadTexture(textures[5]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0, 0.0, false);
+	Sprite tree          (&shader, loadTexture(textures[6]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0, 0.0, false);
+	Sprite bones         (&shader, loadTexture(textures[7]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0, 0.0, false);
 
-	hero = new CharacterController(&shader, loadTexture(textures[9]), glm::vec3(100.0, 200.0, 0.0), glm::vec3(100, 100, 1.0), 0.0, 5.0, 3, 1);
+	monster = new Sprite (&shader, loadTexture(textures[8]), glm::vec3(400.0, 200.0, 0.0), glm::vec3(100, 100, 1.0), 0.0, 5.0, false);
+	hero = new CharacterController(&shader, loadTexture(textures[9]), glm::vec3(100.0, 200.0, 0.0), glm::vec3(100, 100, 1.0), 0.0, 5.0, true, 3, 1);
 
 	// Ativando o buffer de textura 0 da opengl
 	glActiveTexture(GL_TEXTURE0);
@@ -104,6 +103,7 @@ int main()
 		glLineWidth(10);
 		glPointSize(20);
 
+		// Desenho das texturas
 		sky.drawShader();
 		graves.drawShader();
 		back_trees.drawShader();

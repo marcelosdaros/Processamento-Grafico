@@ -8,7 +8,7 @@
 class CharacterController : public Sprite {
 
 public:
-	CharacterController(Shader* shader, GLuint texID, glm::vec3 position, glm::vec3 scale, float angle, float movement, int nFrames, int step);
+	CharacterController(Shader* shader, GLuint texID, glm::vec3 position, glm::vec3 scale, float angle, float movement, bool mirror, int nFrames, int step);
 	~CharacterController();
 	void changeStep();
 	void setupVertices(float pi, float pf);

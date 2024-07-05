@@ -1,12 +1,13 @@
 #include "Sprite.h"
 
-Sprite::Sprite(Shader* shader, GLuint texID, glm::vec3 position, glm::vec3 scale, float angle, float movement) {
+Sprite::Sprite(Shader* shader, GLuint texID, glm::vec3 position, glm::vec3 scale, float angle, float movement, bool mirror) {
 
 	this->texID = texID;
 	this->position = position;
 	this->scale = scale;
 	this->angle = angle;
 	this->movement = movement;
+	this->mirror = mirror;
 	setShader(shader);
 
 	// Coordenadas x, y e z dos triângulos para mandar para o VBO (Vertex Buffer Object)
@@ -66,7 +67,12 @@ void Sprite::configureModel() {
 	glm::mat4 model = glm::mat4(1); // Matriz identidade
 	model = glm::translate(model, position);
 	model = glm::rotate(model, glm::radians(angle), glm::vec3(0.0, 0.0, 1.0));
-	model = glm::scale(model, scale);
+	if (this->mirror) {
+		model = glm::scale(model, glm::vec3(-scale.x, scale.y, scale.z));
+	}
+	else {
+		model = glm::scale(model, scale);
+	}
 	shader->setMat4("model", glm::value_ptr(model));
 }
 
@@ -92,8 +98,10 @@ void Sprite::goDown() {
 
 void Sprite::goLeft() {
 	position.x -= movement;
+	this->mirror = true;
 }
 
 void Sprite::goRight() {
 	position.x += movement;
+	this->mirror = false;
 }

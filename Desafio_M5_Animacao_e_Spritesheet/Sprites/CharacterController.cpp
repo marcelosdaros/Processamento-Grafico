@@ -1,7 +1,7 @@
 #include "CharacterController.h"
 
-CharacterController::CharacterController(Shader* shader, GLuint texID, glm::vec3 position, glm::vec3 scale, float angle, float movement, int nFrames, int step)
-	: Sprite(shader, texID, position, scale, angle, movement) {
+CharacterController::CharacterController(Shader* shader, GLuint texID, glm::vec3 position, glm::vec3 scale, float angle, float movement, bool mirror, int nFrames, int step)
+	: Sprite(shader, texID, position, scale, angle, movement, mirror) {
 	
 	this->nFrames = nFrames;
 	this->step = step;
@@ -26,7 +26,6 @@ void CharacterController::setupVertices(float pi, float pf) {
 		 -0.5f,-0.5f, 0.0f, 1.0f, 0.0f, 0.0f, pi, 0.0f,  //v1
 		  0.5f,-0.5f, 0.0f, 1.0f, 0.0f, 0.0f, pf, 0.0f,  //v3
 		  0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, pf, 1.0f   //v2
-
 	};
 
 	GLuint VBO;
