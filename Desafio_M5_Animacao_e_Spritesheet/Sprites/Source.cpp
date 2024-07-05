@@ -76,7 +76,7 @@ int main()
 	Sprite tree          (&shader, loadTexture(textures[6]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0, 0.0, false);
 	Sprite bones         (&shader, loadTexture(textures[7]), glm::vec3(400.0, 300.0, 0.0), glm::vec3(800, 500, 1.0), 0.0, 0.0, false);
 
-	monster = new Sprite (&shader, loadTexture(textures[8]), glm::vec3(400.0, 200.0, 0.0), glm::vec3(100, 100, 1.0), 0.0, 5.0, false);
+	monster = new Sprite (&shader, loadTexture(textures[8]), glm::vec3(400.0, 200.0, 0.0), glm::vec3(100, 100, 1.0), 0.0, 5.0, true);
 	hero = new CharacterController(&shader, loadTexture(textures[9]), glm::vec3(100.0, 200.0, 0.0), glm::vec3(100, 100, 1.0), 0.0, 5.0, true, 3, 1);
 
 	// Ativando o buffer de textura 0 da opengl

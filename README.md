@@ -1,4 +1,6 @@
 # Processamento Gráfico 2024/1
 
-- Repositório criado por Marcelo Daros para entregar os desafios/atividades da disciplina de Processamento Gráfico.
-- Desafio do módulo 4: o código fonte está na pasta Desafio_M4/Sprites
+- Repositório criado por Marcelo Daros para entregar o código fonte dos desafios/atividades da disciplina de Processamento Gráfico.
+- Desafio do módulo 3: código fonte em Desafio_M3_Jogo_das_Cores
+- Desafio do módulo 4: código fonte em Desafio_M4_Texturas/Sprites
+- Desafio do módulo 5: código fonte em Desafio_M5_Animacao_e_Spritesheet
