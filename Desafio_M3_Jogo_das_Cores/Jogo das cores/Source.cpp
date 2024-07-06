@@ -74,7 +74,6 @@ int main()
 
 	// Compilando e buildando o shader
 	Shader shader("../shaders/retangulo.vs", "../shaders/retangulo.fs");
-	Shader shaderPalete("../shaders/palete.vs", "../shaders/palete.fs");
 
 	// Gerando um buffer simples
 	GLuint VAO = setup();
@@ -132,15 +131,6 @@ int main()
 				}
 				break;
 			}
-
-		shaderPalete.Use();
-
-		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(0.70, -0.70, 0)); 
-		model = glm::scale(model, glm::vec3(0.5, 0.5, 1)); 
-		shaderPalete.setMat4("model", glm::value_ptr(model));
-
-		glDrawArrays(GL_TRIANGLE_FAN, 4, 4);
 
 		// Desconectando o buffer de geometria
 		glBindVertexArray(0);
